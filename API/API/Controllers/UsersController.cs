@@ -3,6 +3,7 @@ using System.Collections;
 using API.Data;
 using API.Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SQLitePCL;
 
 namespace API.Controllers;
@@ -12,16 +13,16 @@ namespace API.Controllers;
 public class UsersController(DataContext context) : ControllerBase
 {
     [HttpGet]
-    public ActionResult<IEnumerable<AppUser>> GetUsers()
+    public async Task<ActionResult<IEnumerable<AppUser>>> GetUsers()
     {
-        var users = context.Users.ToList();
+        var users = await context.Users.ToListAsync();
         return users;
     }
 
     [HttpGet("{id:int}")]
-    public ActionResult<AppUser> GetUser(int id)
+    public async Task<ActionResult<AppUser>> GetUser(int id)
     {
-        var user = context.Users.Find(id);
+        var user = await context.Users.FindAsync(id);
 
         if (user == null) return NotFound();
 
